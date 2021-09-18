@@ -362,6 +362,8 @@
                                         <h3 class="Discount">
                                             <font>$49.90</font> <span class="DiscountBox">20%</span>
                                         </h3>
+                                        
+
                                         <p class="quantityText"><span>Quantity  | 3</span> </p>
                                     </div>
                                 </div>

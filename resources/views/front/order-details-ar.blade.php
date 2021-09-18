@@ -30,7 +30,47 @@
                                         <font>{{ $item->price_before_offer }}  {{ $currency_data['currency']->currency_ar }}</font> <span class="DiscountBox">{{ $item->discount }}%</span>
                                     </h3>
                                     @endif
-                                    
+                                    <a  data-bs-toggle="modal" data-bs-target="#exampleModalU{{ $item->id }}" href="#" class="PaymentMethod m-3" title="">
+                                        السيريالات
+                                    </a>
+                                    <div class="modal fade" id="exampleModalU{{ $item->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    <h5 class="modal-title">الأكواد</h5>
+                                                    
+                                                </div>
+                                                <div class="modal-body">
+                                                    <table class="table table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                            <th>Pin</th>
+                                                            <th>رقم المسلسل</th>
+                                                            <th>صالح حتى</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @if ($item->serials && count($item->serials) > 0)
+                                                            @foreach ($item->serials as $row)
+                                                            <tr>
+                                                                <td>{{ $row->serial }}</td>
+                                                                <td>{{ $row->serial_number }}</td>
+                                                                <td>{{ $row->valid_to }}</td>
+                                                            </tr>
+                                                            @endforeach 
+                                                            @endif
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    {{--  <button class="btn" data-dismiss="modal"><i class="flaticon-cancel-12"></i> Discard</button>  --}}
+                                                    
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
                                     <p class="quantityText"><span>الكمية  | {{ $item->count }}</span> </p>
                                 </div>
                             </div>

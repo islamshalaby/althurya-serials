@@ -782,6 +782,8 @@ class HomeController extends Controller{
             }
     
             return view('front.products-list-ar',compact('data','currency_data','web_image'));
+        }else {
+            return redirect()->route('front.failed');
         }
     }
 
@@ -992,37 +994,47 @@ class HomeController extends Controller{
 
     // get user orders
     public function getUserOrders(Request $request) {
-        Parent::getCartData($request);
-        $request->lang = 'ar';
-        $user_id = auth()->guard('user')->user()->id;
-        $data['orders'] = $this->getMyOrders($user_id, $request);
-
-        return view('front.my-requests-ar', compact('data'));
+        if ($this->webVisitor) {
+            Parent::getCartData($request);
+            $request->lang = 'ar';
+            $user_id = auth()->guard('user')->user()->id;
+            $data['orders'] = $this->getMyOrders($user_id, $request);
+    
+            return view('front.my-requests-ar', compact('data'));
+        }else {
+            return redirect()->route('front.failed');
+        }
+        
     }
 
     // get order details
     public function getOrderDetails(Request $request) {
-        Parent::getCartData($request);
-        $webVisitor = $this->webVisitor;
-        $currency_data['currency'] = $this->currency;
-        $toCurr = $webVisitor->country->currency_en;
-        $data['currency'] = $this->gSliderAdetCurrency($toCurr);
-        $request->lang = 'ar';
-        $order_id = $request->id;
-        $data['order'] = $this->getOrderDetail($order_id, $request);
-        $data['order']->total_price = $data['order']->total_price * $data['currency']['value'];
-        $data['order']->total_price = number_format((float)$data['order']->total_price, 3, '.', '');
-        if (count($data['order']->items) > 0) {
-            $data['order']->items->map(function ($row) use ($data) {
-                
-                $row->final_price = $row->final_price * $data['currency']['value'];
-                
-                $row->final_price = number_format((float)$row->final_price, 3, '.', '');
-                $row->price_before_offer = $row->price_before_offer * $data['currency']['value'];
-                $row->price_before_offer = number_format((float)$row->price_before_offer, 3, '.', '');
-                return $row;
-            });
+        if ($this->webVisitor) {
+            Parent::getCartData($request);
+            $webVisitor = $this->webVisitor;
+            $currency_data['currency'] = $this->currency;
+            $toCurr = $webVisitor->country->currency_en;
+            $data['currency'] = $this->gSliderAdetCurrency($toCurr);
+            $request->lang = 'ar';
+            $order_id = $request->id;
+            $data['order'] = $this->getOrderDetail($order_id, $request);
+            $data['order']->total_price = $data['order']->total_price * $data['currency']['value'];
+            $data['order']->total_price = number_format((float)$data['order']->total_price, 3, '.', '');
+            if (count($data['order']->items) > 0) {
+                $data['order']->items->map(function ($row) use ($data) {
+                    
+                    $row->final_price = $row->final_price * $data['currency']['value'];
+                    
+                    $row->final_price = number_format((float)$row->final_price, 3, '.', '');
+                    $row->price_before_offer = $row->price_before_offer * $data['currency']['value'];
+                    $row->price_before_offer = number_format((float)$row->price_before_offer, 3, '.', '');
+                    return $row;
+                });
+            }
+        }else {
+            return redirect()->route('front.failed');
         }
+        
 
         return view('front.order-details-ar', compact('data', 'currency_data'));
     }

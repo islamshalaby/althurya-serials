@@ -8,7 +8,19 @@
                 <div class="productTopBox">
                     <div class="row">
                         <div class="col-lg-3 col-md-4  col-12">
-                            <div class="PhotoBox"><img src="https://res.cloudinary.com/al-thuraya/image/upload/w_260,q_100/v1581928924/{{ $data->images[0] }}" class="img-fluid" alt=""></div>
+                            <div class="view view-sixth PhotoBox">
+                                @if (Auth::guard('user')->user())
+                                <form action="{{ route('front.like.product.put') }}" method="post">
+                                    @csrf
+                                    <input name="_method" type="hidden" value="PUT">
+                                    <input type="hidden" name="product_id" value="{{ $data->id }}" />
+                                    <a href="#" class="favorite-pr like {{ $data->favorite == true ? 'Active' : '' }}"><i></i></a>
+                                </form>
+                                @else
+                                <a href="{{ route('front.login') }}" class="favorite-pr {{ $data->favorite == true ? 'Active' : '' }}"><i></i></a>
+                                @endif
+                                <img src="https://res.cloudinary.com/al-thuraya/image/upload/w_260,q_100/v1581928924/{{ $data->images[0] }}" class="img-fluid" alt="">
+                            </div>
                         </div>
                         <div class="col-lg-9 col-md-8 col-12">
                             <h2 class="p-title">{{$data->title}}</h2>

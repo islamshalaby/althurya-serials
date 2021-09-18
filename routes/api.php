@@ -47,9 +47,11 @@ Route::group([
 // favorites
 Route::group([
     'middleware' => 'api',
-    'prefix' => 'serials'
+    'prefix' => 'favorites'
 ] , function($router){
-    Route::post('/valid' , 'SerialController@getValidProductSerials');
+    Route::get('/{lang}/{v}' , 'FavoriteController@getfavorites');
+    Route::post('/{lang}/{v}' , 'FavoriteController@addtofavorites');
+    Route::delete('/{lang}/{v}' , 'FavoriteController@removefromfavorites');
 });
 
 // favorites

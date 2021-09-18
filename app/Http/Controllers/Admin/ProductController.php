@@ -64,17 +64,34 @@ class ProductController extends AdminController{
         }
         $data['products'] = $data['products']->orderBy('id' , 'desc')->get();
 
-        if($request->change_price){
+        // if($request->change_price){
             for ($i =0; $i < count($data['products']); $i ++) {
-                if ($data['products'][$i]->country) {
-                    $data['products'][$i]['final_price'] = $data['products'][$i]->country->price;
-                }else {
-                    $api = APIHelpers::converCurruncy2("USD", 'EGP');
+                $path='http://athath-ads.tk/api/serials/valid';
+                $fields =array(
+                    'product_id' => $data['products'][$i]->id
+                );
+                $payload =json_encode($fields);
+                $curl_session =curl_init();
+                curl_setopt($curl_session,CURLOPT_URL, $path);
+                curl_setopt($curl_session,CURLOPT_POST, true);
+                curl_setopt($curl_session,CURLOPT_RETURNTRANSFER,true);
+                curl_setopt($curl_session,CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($curl_session,CURLOPT_IPRESOLVE, CURLOPT_IPRESOLVE);
+                curl_setopt($curl_session,CURLOPT_POSTFIELDS, $payload);
+                $result=curl_exec($curl_session);
+                dd($result);
+                curl_close($curl_session);
+                $result = json_decode($result);
+                
+                // if ($data['products'][$i]->country) {
+                //     $data['products'][$i]['final_price'] = $data['products'][$i]->country->price;
+                // }else {
+                //     $api = APIHelpers::converCurruncy2("USD", 'EGP');
 
-                    $data['products'][$i]['final_price'] = $data['products'][$i]['final_price'] * $api['value'];
-                }
+                //     $data['products'][$i]['final_price'] = $data['products'][$i]['final_price'] * $api['value'];
+                // }
             }
-        }
+        // }
         
         $data['encoded_products'] = json_encode($data['products']);
         return view('admin.products', ['data' => $data]);
