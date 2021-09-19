@@ -46,18 +46,9 @@ class SerialController extends Controller
 
     // upload serial
     public function uploadSerial(Request $request) {
-        // $path1 = request()->file('file')->store('temp'); 
-        // $path=storage_path('app').'/'.$path1;
-        dd($request->excel_file);
         Excel::import(new SerialImport, request()->excel_file);
 
-        $validSerials = $this->getValidProductSerials($request->product_id);
-        $allSerials = $this->getAllProductSerials($request->product_id);
-
-        $data['count_valid_serials'] = count($validSerials->data);
-        $data['count_all_serials'] = count($allSerials->data);
-
-        $response = APIHelpers::createApiResponse(false , 200 , '' , '' , $data , 'ar');
+        $response = APIHelpers::createApiResponse(false , 200 , '' , '' , null , 'ar');
         return response()->json($response , 200);
     }
 }
