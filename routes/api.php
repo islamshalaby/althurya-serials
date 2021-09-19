@@ -206,5 +206,6 @@ Route::group([
     Route::post('valid', 'SerialController@getValidProductSerials')->middleware('checkguest');
     Route::get('delete/{id}', 'SerialController@deleteSerial')->middleware('checkguest');
     Route::post('upload', 'SerialController@uploadSerial')->middleware('checkguest');
+    Route::get('count/{product_id}', 'SerialController@getCountValidAllSerials')->middleware('checkguest');
     
 });

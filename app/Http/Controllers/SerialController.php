@@ -51,4 +51,13 @@ class SerialController extends Controller
         $response = APIHelpers::createApiResponse(false , 200 , '' , '' , null , 'ar');
         return response()->json($response , 200);
     }
+
+    // get count vLid - all
+    public function getCountValidAllSerials(Request $request) {
+        $data['count_valid_serials'] = Serial::where('product_id', $request->product_id)->where('sold', 0)->where('deleted', 0)->count();
+        $data['count_all_serials'] = Serial::where('product_id', $request->product_id)->count();
+
+        $response = APIHelpers::createApiResponse(false , 200 , '' , '' , $data , 'ar');
+        return response()->json($response , 200);
+    }
 }
