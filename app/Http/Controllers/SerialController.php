@@ -4,17 +4,28 @@ namespace App\Http\Controllers;
 use App\Serial;
 use Illuminate\Http\Request;
 use App\Helpers\APIHelpers;
+use Excel;
+use App\Imports\SerialImport;
+
 
 class SerialController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api' , ['except' => ['getValidProductSerials', 'deleteSerial']]);
+        $this->middleware('auth:api' , ['except' => ['getValidProductSerials', 'deleteSerial', 'uploadSerial']]);
     }
 
     // get valid product serials
     public function getValidProductSerials(Request $request) {
         $data = Serial::where('product_id', $request->product_id)->where('sold', 0)->where('deleted', 0)->orderBy('id', 'desc')->get();
+
+        $response = APIHelpers::createApiResponse(false , 200 , '' , '' , $data , 'ar');
+        return response()->json($response , 200);
+    }
+
+    // get all product serials
+    public function getAllProductSerials(Request $request) {
+        $data = Serial::where('product_id', $request->product_id)->orderBy('id', 'desc')->get();
 
         $response = APIHelpers::createApiResponse(false , 200 , '' , '' , $data , 'ar');
         return response()->json($response , 200);
@@ -31,5 +42,22 @@ class SerialController extends Controller
             $response = APIHelpers::createApiResponse(true , 406 , 'id not exist' , 'id not exist' , null , 'ar');
             return response()->json($response , 200);
         }
+    }
+
+    // upload serial
+    public function uploadSerial(Request $request) {
+        $path1 = request()->file('file')->store('temp'); 
+        $path=storage_path('app').'/'.$path1;
+        
+        Excel::import(new SerialImport, $path);
+
+        $validSerials = $this->getValidProductSerials($request->product_id);
+        $allSerials = $this->getAllProductSerials($request->product_id);
+
+        $data['count_valid_serials'] = count($validSerials->data);
+        $data['count_all_serials'] = count($allSerials->data);
+
+        $response = APIHelpers::createApiResponse(false , 200 , '' , '' , $data , 'ar');
+        return response()->json($response , 200);
     }
 }
