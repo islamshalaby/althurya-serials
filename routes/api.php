@@ -198,3 +198,10 @@ Route::get('/pay/success' , 'OrderController@pay_sucess');
 Route::get('/pay/error' , 'OrderController@pay_error');
 Route::get('/excute_pay' , 'OrderController@excute_pay');
 Route::get('/wallet/excute_pay' , 'WalletController@excute_pay');
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'serials'
+], function ($router) {
+    Route::post('valid', 'SerialController@getValidProductSerials')->middleware('checkguest');
+});
