@@ -9,7 +9,7 @@ class SerialController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api' , ['except' => ['getValidProductSerials']]);
+        $this->middleware('auth:api' , ['except' => ['getValidProductSerials', 'deleteSerial']]);
     }
 
     // get valid product serials
@@ -18,5 +18,18 @@ class SerialController extends Controller
 
         $response = APIHelpers::createApiResponse(false , 200 , '' , '' , $data , 'ar');
         return response()->json($response , 200);
+    }
+
+    // delete serial
+    public function deleteSerial(Request $request) {
+        $data = Serial::where('id', $request->id)->first();
+        if ($data) {
+            $data->update(['deleted' => 1]);
+            $response = APIHelpers::createApiResponse(false , 200 , '' , '' , $data , 'ar');
+            return response()->json($response , 200);
+        }else {
+            $response = APIHelpers::createApiResponse(true , 406 , 'id not exist' , 'id not exist' , null , 'ar');
+            return response()->json($response , 200);
+        }
     }
 }

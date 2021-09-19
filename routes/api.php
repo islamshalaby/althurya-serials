@@ -204,4 +204,6 @@ Route::group([
     'prefix' => 'serials'
 ], function ($router) {
     Route::post('valid', 'SerialController@getValidProductSerials')->middleware('checkguest');
+    Route::get('delete/{id}', 'SerialController@deleteSerial')->middleware('checkguest');
+    
 });
