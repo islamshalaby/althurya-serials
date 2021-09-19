@@ -48,8 +48,8 @@ class SerialController extends Controller
     public function uploadSerial(Request $request) {
         // $path1 = request()->file('file')->store('temp'); 
         // $path=storage_path('app').'/'.$path1;
-        dd(request()->file);
-        Excel::import(new SerialImport, request()->file);
+        dd(request()->excel_file);
+        Excel::import(new SerialImport, request()->excel_file);
 
         $validSerials = $this->getValidProductSerials($request->product_id);
         $allSerials = $this->getAllProductSerials($request->product_id);
