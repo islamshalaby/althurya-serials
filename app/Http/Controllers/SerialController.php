@@ -12,7 +12,7 @@ class SerialController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api' , ['except' => ['getValidProductSerials', 'deleteSerial', 'uploadSerial']]);
+        $this->middleware('auth:api' , ['except' => ['getValidProductSerials', 'deleteSerial', 'uploadSerial', 'getCountValidAllSerials']]);
     }
 
     // get valid product serials
