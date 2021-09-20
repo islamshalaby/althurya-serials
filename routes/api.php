@@ -208,5 +208,7 @@ Route::group([
     Route::post('upload', 'SerialController@uploadSerial')->middleware('checkguest');
     Route::get('count/{product_id}', 'SerialController@getCountValidAllSerials')->middleware('checkguest');
     Route::post('normal-upload', 'SerialController@updateAmount')->middleware('checkguest');
+    Route::post('likecard-serial', 'SerialController@addlikeCardSerial')->middleware('checkguest');
+    Route::post('update-serial-likecard', 'SerialController@updateSerialsLikeCardProduct')->middleware('checkguest');
     
 });

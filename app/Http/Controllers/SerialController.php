@@ -12,7 +12,7 @@ class SerialController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api' , ['except' => ['getValidProductSerials', 'deleteSerial', 'uploadSerial', 'getCountValidAllSerials', 'updateAmount']]);
+        $this->middleware('auth:api' , ['except' => ['getValidProductSerials', 'deleteSerial', 'uploadSerial', 'getCountValidAllSerials', 'updateAmount', 'addlikeCardSerial', 'updateSerialsLikeCardProduct']]);
     }
 
     // get valid product serials
@@ -64,12 +64,6 @@ class SerialController extends Controller
     // update amount
     public function updateAmount(Request $request) {
         $post = $request->all();
-        $request->validate([
-            'total_quatity' => 'required',
-            'serials.*' => ['required', 'unique:serials,serial', 'distinct'], // distinct - to not repeat value
-            'valid_to' => 'required'
-        ]);
-        
         if ($post['serials'] && count($post['serials']) > 0) {
             
             for ($i = 0; $i < count($post['serials']); $i ++) {
@@ -82,6 +76,32 @@ class SerialController extends Controller
         }
 
         
+        $response = APIHelpers::createApiResponse(false , 200 , '' , '' , null , 'ar');
+        return response()->json($response , 200);
+    }
+
+    // create serial bought by like card
+    public function addlikeCardSerial(Request $request) {
+        $post = $request->all();
+        Serial::create(['like_product_id' => $post['product_id'],
+        'serial' => $post['serial'],
+         'valid_to' => $post['valid_to']
+         ]);
+
+         $response = APIHelpers::createApiResponse(false , 200 , '' , '' , null , 'ar');
+         return response()->json($response , 200);
+    }
+
+    // update all serials added with like card by product
+    public function updateSerialsLikeCardProduct(Request $request) {
+        $data = Serial::where('like_product_id', $request->like_product_id)->where('sold', 0)->where('deleted', 0)->get()
+        ->map(function ($row) use ($request) {
+            $row->product_id = $request->product_id;
+
+            $row->save();
+        });
+        
+
         $response = APIHelpers::createApiResponse(false , 200 , '' , '' , null , 'ar');
         return response()->json($response , 200);
     }
