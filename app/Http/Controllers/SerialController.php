@@ -12,7 +12,7 @@ class SerialController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api' , ['except' => ['getValidProductSerials', 'deleteSerial', 'uploadSerial', 'getCountValidAllSerials']]);
+        $this->middleware('auth:api' , ['except' => ['getValidProductSerials', 'deleteSerial', 'uploadSerial', 'getCountValidAllSerials', 'updateAmount']]);
     }
 
     // get valid product serials
@@ -58,6 +58,31 @@ class SerialController extends Controller
         $data['count_all_serials'] = Serial::where('product_id', $request->product_id)->count();
 
         $response = APIHelpers::createApiResponse(false , 200 , '' , '' , $data , 'ar');
+        return response()->json($response , 200);
+    }
+
+    // update amount
+    public function updateAmount(Request $request) {
+        $post = $request->all();
+        $request->validate([
+            'total_quatity' => 'required',
+            'serials.*' => ['required', 'unique:serials,serial', 'distinct'], // distinct - to not repeat value
+            'valid_to' => 'required'
+        ]);
+        
+        if ($post['serials'] && count($post['serials']) > 0) {
+            
+            for ($i = 0; $i < count($post['serials']); $i ++) {
+                
+                Serial::create(['product_id' => $post['product_id'],
+                 'serial' => $post['serials'][$i],
+                  'valid_to' => $post['valid_to'][$i]
+                  ]);
+            }
+        }
+
+        
+        $response = APIHelpers::createApiResponse(false , 200 , '' , '' , null , 'ar');
         return response()->json($response , 200);
     }
 }

@@ -813,7 +813,7 @@ class ProductController extends AdminController{
         $post = $request->all();
         $request->validate([
             'total_quatity' => 'required',
-            'serials.*' => ['required', 'unique:serials,serial', 'distinct'],
+            'serials.*' => ['required', 'unique:serials,serial', 'distinct'], // distinct - to not repeat value
             'valid_to' => 'required'
         ]);
         
