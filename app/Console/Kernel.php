@@ -4,6 +4,8 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Serial;
+use Carbon\Carbon;
 
 class Kernel extends ConsoleKernel
 {
@@ -24,8 +26,16 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $schedule->call(function () {
+            Serial::where('deleted', 0)->where('sold', 0)->get()
+            ->map(function ($row) {
+                $validTo = Carbon::parse($row->valid_to);
+                if ($validTo->isPast()) {
+                    $row->deleted = 1;
+                    $row->save();
+                }
+            });
+        })->daily();
     }
 
     /**
