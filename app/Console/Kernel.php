@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('serial:update')->everyFiveMinutes();
+        $schedule->command('serial:update')->everyTwoMinutes();
     }
 
     /**
