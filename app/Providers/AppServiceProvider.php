@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Serial;
-use Illuminate\Support\Facades\Artisan;
 use Carbon\Carbon;
 
 class AppServiceProvider extends ServiceProvider
@@ -28,14 +27,13 @@ class AppServiceProvider extends ServiceProvider
     {
         // get permissions of current admin
         date_default_timezone_set('Asia/Kuwait');
-        Artisan::call('php artisan list');
-        // Serial::where('deleted', 0)->where('sold', 0)->get()
-        // ->map(function ($row) {
-        //     $validTo = Carbon::parse($row->valid_to);
-        //     if ($validTo->isPast()) {
-        //         $row->deleted = 1;
-        //         $row->save();
-        //     }
-        // });
+        Serial::where('deleted', 0)->where('sold', 0)->get()
+        ->map(function ($row) {
+            $validTo = Carbon::parse($row->valid_to);
+            if ($validTo->isPast()) {
+                $row->deleted = 1;
+                $row->save();
+            }
+        });
     }
 }
