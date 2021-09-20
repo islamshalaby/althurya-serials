@@ -85,7 +85,8 @@ class SerialController extends Controller
         $post = $request->all();
         Serial::create(['like_product_id' => $post['product_id'],
         'serial' => $post['serial'],
-         'valid_to' => $post['valid_to']
+         'valid_to' => $post['valid_to'],
+         'serial_number' => $post['serial_number']
          ]);
 
          $response = APIHelpers::createApiResponse(false , 200 , '' , '' , null , 'ar');
@@ -94,15 +95,16 @@ class SerialController extends Controller
 
     // update all serials added with like card by product
     public function updateSerialsLikeCardProduct(Request $request) {
-        $data = Serial::where('like_product_id', $request->like_product_id)->where('sold', 0)->where('deleted', 0)->get()
+        $serials = Serial::where('like_product_id', $request->like_product_id)->where('sold', 0)->where('deleted', 0)->get()
         ->map(function ($row) use ($request) {
             $row->product_id = $request->product_id;
 
             $row->save();
         });
-        
+        $data['count_valid'] = $serials->count();
+        $data['count_all'] = Serial::where('like_product_id', $request->like_product_id)->count();
 
-        $response = APIHelpers::createApiResponse(false , 200 , '' , '' , null , 'ar');
+        $response = APIHelpers::createApiResponse(false , 200 , '' , '' , $data , 'ar');
         return response()->json($response , 200);
     }
 }
