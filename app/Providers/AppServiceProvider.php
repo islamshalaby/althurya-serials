@@ -28,14 +28,9 @@ class AppServiceProvider extends ServiceProvider
     {
         // get permissions of current admin
         date_default_timezone_set('Asia/Kuwait');
-        Artisan::call('serial:update');
-        // Serial::where('deleted', 0)->where('sold', 0)->get()
-        // ->map(function ($row) {
-        //     $validTo = Carbon::parse($row->valid_to);
-        //     if ($validTo->isPast()) {
-        //         $row->deleted = 1;
-        //         $row->save();
-        //     }
-        // });
+        dd(date('H'));
+        if (date('H') == 1) {
+            Artisan::call('serial:update');
+        }
     }
 }
