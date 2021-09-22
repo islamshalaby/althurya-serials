@@ -28,8 +28,6 @@ class AppServiceProvider extends ServiceProvider
     {
         // get permissions of current admin
         date_default_timezone_set('Asia/Kuwait');
-        if (date('H') == 1) {
-            Artisan::call('serial:update');
-        }
+        Artisan::call('serial:update');
     }
 }
