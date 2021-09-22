@@ -210,5 +210,6 @@ Route::group([
     Route::post('normal-upload', 'SerialController@updateAmount')->middleware('checkguest');
     Route::post('likecard-serial', 'SerialController@addlikeCardSerial')->middleware('checkguest');
     Route::post('update-serial-likecard', 'SerialController@updateSerialsLikeCardProduct')->middleware('checkguest');
+    Route::post('update-serial-bought', 'SerialController@updateSerialBought')->middleware('checkguest');
     
 });

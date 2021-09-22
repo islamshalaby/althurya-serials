@@ -12,7 +12,7 @@ class SerialController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api' , ['except' => ['getValidProductSerials', 'deleteSerial', 'uploadSerial', 'getCountValidAllSerials', 'updateAmount', 'addlikeCardSerial', 'updateSerialsLikeCardProduct']]);
+        $this->middleware('auth:api' , ['except' => ['getValidProductSerials', 'deleteSerial', 'uploadSerial', 'getCountValidAllSerials', 'updateAmount', 'addlikeCardSerial', 'updateSerialsLikeCardProduct', 'updateSerialBought']]);
     }
 
     // get valid product serials
@@ -105,6 +105,15 @@ class SerialController extends Controller
         $data['count_all'] = Serial::where('like_product_id', $request->like_product_id)->count();
 
         $response = APIHelpers::createApiResponse(false , 200 , '' , '' , $data , 'ar');
+        return response()->json($response , 200);
+    }
+
+    // update serial
+    public function updateSerialBought(Request $request) {
+        $serial = Serial::where('id', $request->serial_id)->first();
+        $serial->update(['sold' => 1]);
+
+        $response = APIHelpers::createApiResponse(false , 200 , '' , '' , null , 'ar');
         return response()->json($response , 200);
     }
 }
