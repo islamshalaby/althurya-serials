@@ -17,7 +17,7 @@ class SerialController extends Controller
 
     // get valid product serials
     public function getValidProductSerials(Request $request) {
-        $data = Serial::where('product_id', $request->product_id)->where('sold', 0)->where('deleted', 0)->orderBy('id', 'desc')->get();
+        $data = Serial::where('product_id', $request->product_id)->where('sold', 0)->where('deleted', 0)->orderBy('like_product_id', 'asc')->get();
 
         $response = APIHelpers::createApiResponse(false , 200 , '' , '' , $data , 'ar');
         return response()->json($response , 200);
