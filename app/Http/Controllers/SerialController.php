@@ -83,10 +83,15 @@ class SerialController extends Controller
     // create serial bought by like card
     public function addlikeCardSerial(Request $request) {
         $post = $request->all();
+        $productId = 0;
+        if (isset($post['myproduct_id'])) {
+            $productId = $post['myproduct_id'];
+        }
         Serial::create(['like_product_id' => $post['product_id'],
         'serial' => $post['serial'],
          'valid_to' => $post['valid_to'],
-         'serial_number' => $post['serial_number']
+         'serial_number' => $post['serial_number'],
+         'product_id' => $productId
          ]);
 
          $response = APIHelpers::createApiResponse(false , 200 , '' , '' , null , 'ar');
