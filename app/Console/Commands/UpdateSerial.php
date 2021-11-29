@@ -39,13 +39,13 @@ class UpdateSerial extends Command
      */
     public function handle()
     {
-        Serial::where('deleted', 0)->where('sold', 0)->get()
-        ->map(function ($row) {
-            $validTo = Carbon::parse($row->valid_to);
-            if ($validTo->isPast()) {
-                $row->deleted = 1;
-                $row->save();
-            }
-        });
+        // Serial::where('deleted', 0)->where('sold', 0)->get()
+        // ->map(function ($row) {
+        //     $validTo = Carbon::parse($row->valid_to);
+        //     if ($validTo->isPast()) {
+        //         $row->deleted = 1;
+        //         $row->save();
+        //     }
+        // });
     }
 }
