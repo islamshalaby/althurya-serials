@@ -46,9 +46,10 @@ class SerialController extends Controller
 
     // upload serial
     public function uploadSerial(Request $request) {
-        Excel::import(new SerialImport, request()->excel_file);
-
-        $response = APIHelpers::createApiResponse(false , 200 , '' , '' , null , 'ar');
+		ini_set('memory_limit', '-1');
+        $file = Excel::import(new SerialImport, request()->excel_file);
+		
+        $response = APIHelpers::createApiResponse(false , 200 , '' , '' , $file , 'ar');
         return response()->json($response , 200);
     }
 
